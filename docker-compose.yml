@@ -1,0 +1,37 @@
+version: '3.6'
+
+services:
+
+  mysql:
+    build:
+      context: ./docker-mysql/
+    environment:
+      MYSQL_USER: "mysql"
+      MYSQL_PASSWORD: "mysql123"
+      MYSQL_ROOT_PASSWORD: "mysql123"
+      MYSQL_DATABASE: "mydb"
+    volumes:
+     - db:/var/lib/mysql:cached
+    ports:
+      - 3306:3306
+
+  php:
+    build:
+      context: ./docker-php/
+    volumes:
+      - .:/var/www
+    expose:
+      - 9000
+
+  nginx:
+    build:
+      context: ./docker-nginx/
+    volumes:
+      - .:/var/www
+    ports:
+      - 80:80
+      - 443:443
+
+volumes:
+  db:
+    driver: "local"
